@@ -1,0 +1,60 @@
+{
+    "workbench.colorTheme": "Default Dark+",
+    "vim.highlightedyank.enable": true,
+    "vim.handleKeys": {
+        "<C-d>": true,
+        "<C-s>": false,
+        "<C-z>": false,
+        "<C-f>": false,
+        "<C-n>": false
+    },
+    "cmake.configureOnOpen": true,
+    "editor.unicodeHighlight.allowedCharacters": {
+        " ": true
+    },
+    "vim.insertModeKeyBindings": [
+        {
+            "before": ["j", "k"],
+            "after": ["<ESC>"]
+        }
+    ],
+    "vim.normalModeKeyBindings": [
+        {
+            "before": ["<leader>", "q"], 
+            "commands": [":q!"]
+        },
+        {
+            "before": ["<C-w>"],
+            "commands": [":wq"]
+        },
+        {
+            "before": ["<leader>", "o"],
+            "commands": ["editor.action.insertLineAfter"]
+        },
+        {
+            "before": ["<leader>", "O"],
+            "commands": ["editor.action.insertLineBefore"]
+        },
+        {
+            "before": ["j"],
+            "after": ["j", "z", "z"]
+        },
+        {
+            "before": ["k"],
+            "after": ["k", "z", "z"]
+        },
+        {
+            "before": ["<leader>", "g", "c"],
+            "commands": ["git.commit"]
+        }
+    ],
+    "vim.hlsearch": true,
+    "editor.lineNumbers": "relative",
+    "vim.useSystemClipboard": true,
+    "vim.easymotion": true,
+    "vim.leader": " ",
+    "scrolloff.alwaysCenter": true
+}
+
+
+
