@@ -1,2 +1,2 @@
 # dot-files
-My VSCode Vim configuration
+My dot-files configuration
