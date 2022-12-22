@@ -45,16 +45,18 @@
         },
         {
             "before": ["<leader>", "g", "c"],
-            "commands": ["git.commit"]
+            "commands": ["git.commitAll"]
+        },
+        {
+            "before": ["<leader>", "g", "s"],
+            "commands": ["git.stageAll"]
         }
     ],
     "vim.hlsearch": true,
     "editor.lineNumbers": "relative",
+    "git.useEditorAsCommitInput": false,
     "vim.useSystemClipboard": true,
     "vim.easymotion": true,
     "vim.leader": " ",
     "scrolloff.alwaysCenter": true
 }
-
-
-
