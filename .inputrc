@@ -1,0 +1,55 @@
+# Run "man 3 readline"
+set editing-mode vi
+set expand-tilde on
+set show-mode-in-prompt on
+
+set vi-ins-mode-string \1\e[;96m\2I: \1\e[;0m\2
+set vi-cmd-mode-string \1\e[;38;2;255;0;0m\2C: \1\e[;0m\2
+set emacs-mode-string \1\e[;38;2;255;255;0m\2E: \1\e[;0m\2
+
+set colored-stats on
+
+set mark-symlinked-directories on
+
+set colored-completion-prefix on
+
+set colored-completion-prefix on
+
+set show-all-if-ambiguous on
+
+set visible-stats on
+
+set match-hidden-files on
+
+set keymap emacs
+
+	"\ee": vi-editing-mode
+
+$if mode=vi
+	set keymap vi-command
+
+		"\C-n": next-history
+		"\C-p": previous-history
+
+		"\ee":  emacs-editing-mode
+
+		"\C-l": clear-screen
+
+	set keymap vi-insert
+
+		"Jk": vi-movement-mode
+		"JK": vi-movement-mode
+		"\e.":  yank-last-arg
+
+		"\ee":  emacs-editing-mode
+
+		"\C-n": next-history
+		"\C-p": previous-history
+
+		"\C-l": clear-screen
+		# Meta-l = <A-l>
+
+		Control-;: "nvim\n"
+
+
+$endif

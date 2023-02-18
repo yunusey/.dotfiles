@@ -13,6 +13,10 @@ require('packer').startup(function(use)
   -- Package manager
   use 'wbthomason/packer.nvim'
 
+  -- For javascript
+  use 'jose-elias-alvarez/null-ls.nvim'
+  use 'MunifTanjim/eslint.nvim'
+
   use { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     requires = {
@@ -40,6 +44,10 @@ require('packer').startup(function(use)
     end,
   }
 
+  use {
+    'https://github.com/nvim-treesitter/playground.git'
+  }
+
   use { -- Additional text objects via treesitter
     'nvim-treesitter/nvim-treesitter-textobjects',
     after = 'nvim-treesitter',
@@ -51,17 +59,21 @@ require('packer').startup(function(use)
   use 'lewis6991/gitsigns.nvim'
 
   use 'navarasu/onedark.nvim' -- Theme inspired by Atom
-  use 'folke/tokyonight.nvim'
+  use 'folke/tokyonight.nvim' -- Theme I'm currently using
   use 'nvim-lualine/lualine.nvim' -- Fancier statusline
   use 'lukas-reineke/indent-blankline.nvim' -- Add indentation guides even on blank lines
   use 'numToStr/Comment.nvim' -- "gc" to comment visual regions/lines
   use 'tpope/vim-sleuth' -- Detect tabstop and shiftwidth automatically
 
-  -- debugging
+  -- Debugging
   use 'mfussenegger/nvim-dap'
   use 'lambdalisue/nerdfont.vim'
   use 'sakhnik/nvim-gdb'
 
+  -- Terminal toggle
+  use {"akinsho/toggleterm.nvim", tag = '*', config = function()
+    require("toggleterm").setup()
+  end}
 
   local dap = require('dap')
   dap.configurations.python = {
@@ -101,30 +113,71 @@ require('packer').startup(function(use)
     command = "gdb"
   }
 
-
-  -- require('dap.ui.widgets').hover()
-
-
-  -- java 
-
+  -- Java related plugins
   use 'mfussenegger/nvim-jdtls'
 
 
   -- Fuzzy Finder (files, lsp, etc)
-
   use { 'nvim-telescope/telescope.nvim', branch = '0.1.x', requires = { 'nvim-lua/plenary.nvim' } }
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built. Only load if `make` is available
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
 
+  -- File Browser for telescope-nvim
+  use { "nvim-telescope/telescope-file-browser.nvim" }
 
-  -- Starify Package
-  use 'mhinz/vim-startify'
-  use 'yunusey/nvim-batman'
-  use 'yunusey/cmake-nvim'
+  -- Fancy sleeping screen for neovim
+  use '~/.config/nvim/lua/nvim-batman'
 
+  -- Do every cmake commands using commandline
+  use '~/.config/nvim/lua/cmake-nvim'
+
+  -- Codeforces environment 
+  use '~/.config/nvim/lua/codeforces-nvim'
+  require('codeforces-nvim').setup({
+    highlights = {
+
+      CodeforcesErrorMsg = {fg="#ff3333"},
+      CodeforcesSection  = {fg="#00c0ff"},
+      CodeforcesOutput   = {fg="#a0ff00"}
+
+    },
+    notify_nvim = true,
+    extension = 'cpp'
+  })
+
+  -- File explorer and dev-icons
   use 'nvim-tree/nvim-tree.lua'
+  require('nvim-tree').setup({
+    view = {
+      mappings = {
+        list = {
+          {key = "u", action = "dir_up"}
+        }
+      }
+    },
+    filters = {
+      dotfiles = false,
+    },
+  })
   use 'nvim-tree/nvim-web-devicons'
+
+  -- Better tabs 
+  use 'romgrk/barbar.nvim'
+
+  -- Notify plugin 
+  use 'rcarriga/nvim-notify'
+  vim.o.termguicolors = true
+  require'notify'.setup({
+    background_colour = "#000000"
+  })
+
+  -- Firenvim to use vim in firefox.
+  use {
+    'glacambre/firenvim',
+    run = function() vim.fn['firenvim#install'](0) end
+  }
+
   -- Add custom plugins to packer from ~/.config/nvim/lua/custom/plugins.lua
   local has_plugins, plugins = pcall(require, 'custom.plugins')
   if has_plugins then
@@ -162,42 +215,6 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 -- [[ Setting options ]]
 -- See `:help vim.o`
 
--- Set highlight on search
-vim.o.hlsearch = false
-
--- Make line numbers default
-vim.wo.number = true
-vim.o.relativenumber = true
-
--- Enable mouse mode
-vim.o.mouse = 'a'
-
--- Enable break indent
-vim.o.breakindent = true
-vim.o.tabstop = 4
-vim.o.shiftwidth = vim.o.tabstop
-vim.o.swapfile = false
-vim.o.backup = false
-vim.o.writebackup = false
-
--- Save undo history
-vim.o.undofile = true
-
--- Case insensitive searching UNLESS /C or capital in search
-vim.o.ignorecase = true
-vim.o.smartcase = true
-
--- Decrease update time
-vim.o.updatetime = 250
-vim.wo.signcolumn = 'yes'
-
--- Set colorscheme
-vim.o.termguicolors = true
-vim.cmd [[colorscheme onedark]]
-vim.api.nvim_create_user_command("Dark", function()vim.cmd[[colorscheme tokyonight-moon]] end, {})
-
--- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
 
 -- [[ Basic Keymaps ]]
 -- Set <space> as the leader key
@@ -205,7 +222,6 @@ vim.o.completeopt = 'menuone,noselect'
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.keymap.set('n', '<leader>q', ':q!<CR>', { desc = '[Q]uit (does not save)' })
 
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
@@ -214,20 +230,6 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
--- Putting new lines without leaving the normal mode.
-vim.keymap.set('n', '<leader>o', "o<Esc>", {silent = true})
-vim.keymap.set('n', '<leader>O', "O<Esc>", {silent = true})
-
--- Parentheses and other auto write stuff
-vim.keymap.set('i', '(', "()<left>", {silent = true})
-vim.keymap.set('i', '"', "\"\"<left>", {silent = true})
-vim.keymap.set('i', '\'', "''<left>", {silent = true})
-vim.keymap.set('i', '[', "[]<left>", {silent = true})
-vim.keymap.set('i', '{', "{}<left>", {silent = true})
-
--- Commandline <leader><leader> opens commandline buffer.
-vim.keymap.set('c', '<leader><leader>', "<C-f>", {silent = true})
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -244,11 +246,30 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- See `:help lualine.txt`
 require('lualine').setup {
   options = {
-    icons_enabled = false,
-    theme = 'onedark',
-    -- theme = 'tokyonight',
+    icons_enabled = true,
+    theme = 'tokyonight',
     component_separators = '|',
-    section_separators = '',
+    section_separators = { left = '', right = '' },
+  },
+  sections = {
+    lualine_a = {
+      { 'mode', separator = { left = '' }, right_padding = 2 },
+    },
+    lualine_b = {{'branch', icon = ''}, {'diff'}, {'diagnostics'}},
+    lualine_c = {'filename'},
+    lualine_x = {'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {
+      { 'location', separator = { right = '' }, left_padding = 2 },
+    },
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {},
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = {},
   },
 }
 
@@ -274,21 +295,61 @@ require('gitsigns').setup {
   },
 }
 
+local fb_actions = require "telescope".extensions.file_browser.actions
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
+    prompt_prefix = '🔭: ',
     mappings = {
       i = {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
+        ['<C-h>'] = "which_key",
+        ['<C-j>'] = require('telescope.actions').move_selection_next,
+        ['<C-k>'] = require('telescope.actions').move_selection_previous,
+        ['<C-n>'] = require('telescope.actions').move_selection_next,
+        ['<C-p>'] = require('telescope.actions').move_selection_previous,
       },
     },
   },
+
+  pickers = {
+    
+  },
+
+  extensions = {
+    file_browser = {
+      prompt_prefix = '🔭: ',
+      theme = 'dropdown',
+      hijack_netrw = true,
+      mappings = {
+        ["i"] = {
+          ['<C-j>'] = require('telescope.actions').move_selection_next,
+          ['<C-k>'] = require('telescope.actions').move_selection_previous,
+          ['<C-n>'] = require('telescope.actions').move_selection_next,
+          ['<C-p>'] = require('telescope.actions').move_selection_previous,
+          ['~']     = fb_actions.goto_home_dir,
+        },
+        ["n"] = {
+          ['<C-j>'] = require('telescope.actions').move_selection_next,
+          ['<C-k>'] = require('telescope.actions').move_selection_previous,
+          ['<C-n>'] = require('telescope.actions').move_selection_next,
+          ['<C-p>'] = require('telescope.actions').move_selection_previous,
+          ['~']     = fb_actions.goto_home_dir,
+          ['u']     = fb_actions.goto_parent_dir,
+        },
+      },
+    },
+  },
+
 }
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
+
+-- Enable telescope-browser
+require("telescope").load_extension "file_browser"
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
@@ -309,12 +370,32 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
+
+vim.filetype.add({
+  extension = {
+    kojl = 'kojl',
+  }  
+})
+
+local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+parser_config.kojl = {
+  install_info = {
+    url = "~/yunusey/tree-sitter-kojl", -- local path or git repo
+    files = {"src/parser.c"},
+    -- optional entries:
+    branch = "main", -- default branch in case of git repo if different from master
+    generate_requires_npm = false, -- if stand-alone parser without npm dependencies
+    requires_generate_from_grammar = true, -- if folder contains pre-generated src/parser.c
+  },
+  filetype = "kojl", -- if filetype does not match the parser name
+}
+
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'typescript', 'help', "kojl" },
 
   highlight = { enable = true },
-  indent = { enable = true, disable = { 'python' } },
+  indent = { enable = true, disable = { 'cpp', 'python' } },
   incremental_selection = {
     enable = true,
     keymaps = {
@@ -368,6 +449,24 @@ require('nvim-treesitter.configs').setup {
       },
     },
   },
+  playground = {
+    enable = true,
+    disable = {},
+    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+    persist_queries = false, -- Whether the query persists across vim sessions
+    keybindings = {
+      toggle_query_editor = 'o',
+      toggle_hl_groups = 'i',
+      toggle_injected_languages = 't',
+      toggle_anonymous_nodes = 'a',
+      toggle_language_display = 'I',
+      focus_language = 'f',
+      unfocus_language = 'F',
+      update = 'R',
+      goto_node = '<cr>',
+      show_help = '?',
+    },
+  }
 }
 
 -- Diagnostic keymaps
@@ -419,6 +518,7 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
 end
 
 -- Enable the following language servers
@@ -433,13 +533,49 @@ local servers = {
   -- rust_analyzer = {},
   -- tsserver = {},
 
-  sumneko_lua = {
+  lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
       telemetry = { enable = false },
     },
   },
 }
+
+local null_ls = require("null-ls")
+local eslint = require("eslint")
+
+null_ls.setup()
+
+eslint.setup({
+  bin = 'eslint', -- or `eslint_d`
+  code_actions = {
+    enable = true,
+    apply_on_save = {
+      enable = true,
+      types = { "directive", "problem", "suggestion", "layout" },
+    },
+    disable_rule_comment = {
+      enable = true,
+      location = "separate_line", -- or `same_line`
+    },
+  },
+  diagnostics = {
+    enable = true,
+    report_unused_disable_directives = false,
+    run_on = "type", -- or `save`
+  },
+})
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+require('lspconfig').rust_analyzer.setup {
+  capabilities = capabilities,
+  cmd = {
+    "rustup", "run", "stable", "rust-analyzer",
+  }
+}
+
+-- Lsp setup for rust
 
 -- Setup neovim lua configuration
 require('neodev').setup()
@@ -514,32 +650,12 @@ cmp.setup {
   },
 }
 
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
--- set termguicolors to enable highlight groups
-vim.opt.termguicolors = true
-
--- empty setup using defaults
-require("nvim-tree").setup()
-
--- OR setup with some options
-require("nvim-tree").setup({
-  sort_by = "case_sensitive",
-  view = {
-    adaptive_size = true,
-    mappings = {
-      list = {
-        { key = "u", action = "dir_up" },
-      },
-    },
-  },
-  renderer = {
-    group_empty = true,
-  },
-  filters = {
-    dotfiles = true,
-  },
+-- Restore cursor position
+vim.api.nvim_create_autocmd({ "BufReadPost" }, {
+    pattern = { "*" },
+    callback = function()
+        vim.api.nvim_exec('silent! normal! g`"zv', false)
+    end,
 })
+
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
