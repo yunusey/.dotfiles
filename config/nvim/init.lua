@@ -45,7 +45,7 @@ require('packer').startup(function(use)
   }
 
   use {
-    'https://github.com/nvim-treesitter/playground.git'
+    'nvim-treesitter/playground'
   }
 
   use { -- Additional text objects via treesitter

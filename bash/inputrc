@@ -3,7 +3,7 @@ set editing-mode vi
 set expand-tilde on
 set show-mode-in-prompt on
 
-set vi-ins-mode-string \1\e[;96m\2I: \1\e[;0m\2
+set vi-ins-mode-string \1\e[;38;2;0;255;0m\2  \1\e[;0m\2
 set vi-cmd-mode-string \1\e[;38;2;255;0;0m\2C: \1\e[;0m\2
 set emacs-mode-string \1\e[;38;2;255;255;0m\2E: \1\e[;0m\2
 
@@ -48,8 +48,6 @@ $if mode=vi
 
 		"\C-l": clear-screen
 		# Meta-l = <A-l>
-
-		Control-;: "nvim\n"
 
 
 $endif

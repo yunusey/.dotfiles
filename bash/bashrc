@@ -30,6 +30,7 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
@@ -63,15 +64,6 @@ else
 fi
 unset color_prompt force_color_prompt
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
-
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -86,17 +78,6 @@ fi
 
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias sync_time='sudo hwclock -s'
-alias python='python3.9'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -140,22 +121,45 @@ current_dir() {
     fi
 }
 
-cwd="$(current_dir)"
-echo ${cwd:0}
 # PS1='\[\e[0;38;5;154m\]\T \[\e[0m\]> \[\e[0;1;38;5;197m\]$(git branch 2>/dev/null | grep '"'"'^*'"'"' | colrm 1 2) \[\e[0m\]> \[\e[0;38;5;45m\]\w \[\e[0m\]$ \[\e[0m\]'
-PS1='\[\e[0;38;5;154m\]\T \[\e[0m\]> \[\e[0;1;38;5;197m\]$(git_branch) \[\e[0m\]> \[\e[0;38;5;45m\]$(current_dir) \[\e[0m\]> \[\e[0m\]'
+
+# Cursor color
+termcol="\[\e[0;38;2;255;100;50m\]"
+
+# Header color
+headcol="100;0;100"
+# Header text
+headtxt="May God bless our  brotherhood"
+# Header prompt in total
+headerp="\[\e[0;38;2;""$headcol""m\]\[\e[0m\]\[\e[0;48;2;""$headcol""m\]"$headtxt"\[\e[0m\]\[\e[0;38;2;""$headcol""m\]\[\e[0m\]"
+
+# Header2 color
+headcol2="254;80;0"
+# Header2 text
+headtxt2=" on  with "
+# header2 prompt in total
+header2p="\n\[\e[0;38;2;""$headcol2""m\]\[\e[0m\]\[\e[0;48;2;""$headcol2""m\]"$headtxt2"\[\e[0m\]\[\e[0;38;2;""$headcol2""m\]\[\e[0m\] "
+
+# Git color
+gitcol="255;0;0"
+# Git text
+gittxt='   $(git_branch) '
+# Git prompt in total
+gitp=" \[\e[0;38;2;""$gitcol""m\]\[\e[0m\]\[\e[0;48;2;""$gitcol""m\]"'\[\e[0;48;2;'$gitcol'm\]'$gittxt'\[\e[0m\]'"\[\e[0m\]\[\e[0;38;2;""$gitcol""m\]\[\e[0m\]"
+
+# Folder background color
+foldercol="0;0;0"
+# Folder foreground color
+folderfcol="0;255;255"
+# Folder text
+foldertxt=' $(current_dir) \[\e[0m\]'
+# Folder prompt in total
+folderp=" \[\e[0;38;2;""$foldercol""m\]\[\e[0m\]\[\e[0;48;2;""$foldercol""m\]"'\[\e[0;48;2;'$foldercol';38;2;'$folderfcol'm\]'$foldertxt'\[\e[0m\]'"\[\e[0m\]\[\e[0;38;2;""$foldercol""m\]\[\e[0m\]\n"
+export PS1=$header2p$headerp$gitp$folderp$termcol
+# export PS1='\[\e[0;38;5;154m\] \T\[\e[0m\] $spcolor> \[\e[0m\]\[\e[0;1;38;5;197m\] $(git_branch) \[\e[0m\]$spcolor> \[\e[0m\]\[\e[0;38;5;45m\] $(current_dir) \[\e[0m\]\n'
 
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
-# Personal Commands
-queries="~/.local/share/nvim/site/pack/packer/start/nvim-treesitter/queries/kojl/"
-alias goplugins='cd ~/.local/share/nvim/site/pack/packer/start/'
-alias ts="tree-sitter"
-alias tsup="cp ~/yunusey/tree-sitter-kojl/queries/* $queries"
-
-export PATH=~/yunusey/tree-sitter-kojl/node_modules/tree-sitter-cli/:$PATH # Tree-sitter path
 
 . "$HOME/.cargo/env" # Rustup
-
-alias hist="history | less +G"
