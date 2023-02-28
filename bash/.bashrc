@@ -88,6 +88,10 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+if [ -f ~/.bindings.sh ]; then
+    . ~/.bindings.sh
+fi
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -124,12 +128,12 @@ current_dir() {
 # PS1='\[\e[0;38;5;154m\]\T \[\e[0m\]> \[\e[0;1;38;5;197m\]$(git branch 2>/dev/null | grep '"'"'^*'"'"' | colrm 1 2) \[\e[0m\]> \[\e[0;38;5;45m\]\w \[\e[0m\]$ \[\e[0m\]'
 
 # Cursor color
-termcol="\[\e[0;38;2;255;100;50m\]"
+termcol="\[\e[0;38;2;255;255;255m\]"
 
 # Header color
 headcol="100;0;100"
 # Header text
-headtxt="May God bless our  brotherhood"
+headtxt="May God bless our  brotherhood!"
 # Header prompt in total
 headerp="\[\e[0;38;2;""$headcol""m\]\[\e[0m\]\[\e[0;48;2;""$headcol""m\]"$headtxt"\[\e[0m\]\[\e[0;38;2;""$headcol""m\]\[\e[0m\]"
 
@@ -160,6 +164,5 @@ export PS1=$header2p$headerp$gitp$folderp$termcol
 
 export VISUAL=vim
 export EDITOR="$VISUAL"
-
 
 . "$HOME/.cargo/env" # Rustup

@@ -22,4 +22,3 @@ end
 
 vim.keymap.set('n', '<leader>KK', DebugLine, {silent = true})
 vim.keymap.set('n', '<leader>vK', Write, {silent = true})
-
