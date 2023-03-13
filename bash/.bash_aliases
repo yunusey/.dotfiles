@@ -25,3 +25,5 @@ alias neovide="~/bin/neovide.exe --wsl"
 alias lvim="~/.local/bin/lvim" # Not using, but wanted to put it anyways...
 
 alias cursor='echo -en "\e[?25l\e[2 q\e[6 q\e[?25h"'
+
+alias sessionizer='tmux-sessionizer'

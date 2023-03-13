@@ -20,3 +20,6 @@ ln -sf ~/yunusey/.dotfiles/bash/.inputrc  ~/.inputrc
 
 rm -rf ~/.tmux.conf
 ln -sf ~/yunusey/.dotfiles/tmux/tmux.conf ~/.tmux.conf
+
+rm -rf ~/bin/tmux-sessionizer.sh
+ln -sf ~/yunusey/.dotfiles/tmux/tmux-sessionizer.sh ~/bin/tmux-sessionizer

@@ -137,17 +137,19 @@ headtxt="May God bless our  brotherhood!"
 # Header prompt in total
 headerp="\[\e[0;38;2;""$headcol""m\]\[\e[0m\]\[\e[0;48;2;""$headcol""m\]"$headtxt"\[\e[0m\]\[\e[0;38;2;""$headcol""m\]\[\e[0m\]"
 
+headerp="" # I don't want to delete eveerything I did before, so for now, just assign it to an empty string.
+
 # Header2 color
 headcol2="254;80;0"
 # Header2 text
-headtxt2=" on  with "
+headtxt2="  on  with  "
 # header2 prompt in total
 header2p="\n\[\e[0;38;2;""$headcol2""m\]\[\e[0m\]\[\e[0;48;2;""$headcol2""m\]"$headtxt2"\[\e[0m\]\[\e[0;38;2;""$headcol2""m\]\[\e[0m\] "
 
 # Git color
 gitcol="255;0;0"
 # Git text
-gittxt='   $(git_branch) '
+gittxt='  $(git_branch) '
 # Git prompt in total
 gitp=" \[\e[0;38;2;""$gitcol""m\]\[\e[0m\]\[\e[0;48;2;""$gitcol""m\]"'\[\e[0;48;2;'$gitcol'm\]'$gittxt'\[\e[0m\]'"\[\e[0m\]\[\e[0;38;2;""$gitcol""m\]\[\e[0m\]"
 
@@ -158,8 +160,8 @@ folderfcol="0;255;255"
 # Folder text
 foldertxt=' $(current_dir) \[\e[0m\]'
 # Folder prompt in total
-folderp=" \[\e[0;38;2;""$foldercol""m\]\[\e[0m\]\[\e[0;48;2;""$foldercol""m\]"'\[\e[0;48;2;'$foldercol';38;2;'$folderfcol'm\]'$foldertxt'\[\e[0m\]'"\[\e[0m\]\[\e[0;38;2;""$foldercol""m\]\[\e[0m\]\n"
-export PS1=$header2p$headerp$gitp$folderp$termcol
+folderp=" \[\e[0;38;2;""$foldercol""m\]\[\e[0m\]\[\e[0;48;2;""$foldercol""m\]"'\[\e[0;48;2;'$foldercol';38;2;'$folderfcol'm\]'$foldertxt'\[\e[0m\]'"\[\e[0m\]\[\e[0;38;2;""$foldercol""m\]\[\e[0m\]"
+export PS1=$header2p$headerp$gitp$folderp$termcol'\n\n'
 # export PS1='\[\e[0;38;5;154m\] \T\[\e[0m\] $spcolor> \[\e[0m\]\[\e[0;1;38;5;197m\] $(git_branch) \[\e[0m\]$spcolor> \[\e[0m\]\[\e[0;38;5;45m\] $(current_dir) \[\e[0m\]\n'
 
 export VISUAL=vim
