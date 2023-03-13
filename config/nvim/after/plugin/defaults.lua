@@ -32,7 +32,7 @@ vim.o.updatetime = 250
 vim.wo.signcolumn = 'yes'
 
 -- Set scrolloff
-vim.o.scrolloff = 8
+vim.o.scrolloff = 11
 
 vim.cmd[[hi NvimTreeNormal guibg=NONE ctermbg=NONE]]
 

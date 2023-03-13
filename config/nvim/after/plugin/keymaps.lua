@@ -1,6 +1,7 @@
 P = function(args)
     print(vim.inspect(args))
 end
+
 N = require("notify")
 
 local default_opts = { noremap = true, silent = true }
@@ -49,6 +50,7 @@ end
 local function openDirInExplorer()
     local dir = vim.fn.expand("%:p:h")
     dir = linux_path .. convertToWindowsPath(dir)
+    print(dir)
     vim.fn.jobstart({"explorer.exe", '"' .. dir .. '"'})
     notify("Opening: " .. dir, "success", {
 	-- render = 'minimal',

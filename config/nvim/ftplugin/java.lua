@@ -7,11 +7,23 @@ local config = {
 
 require('jdtls').start_or_attach(config)
 
-function JRun()
+function JRun(args)
+    print(args)
     local package = vim.fn.expand ("%:p:h:t")
     local file    = vim.fn.expand ("%:p:t:r")
-    local command = "/usr/bin/env /usr/lib/jvm/java-11-openjdk-amd64/bin/java -cp /tmp/vscodesws_b8651/jdt_ws/jdt.ls-java-project/bin"
-    local pfile   = package .. "." .. file
-    command = command .. " " .. pfile
-    vim.cmd(":TermExec cmd='" .. command .. "'")
+    local arg     = package .. '.' .. file
+    local command ='~/yunusey/APCSA/.config/run.sh ' .. arg .. ' ' .. args
+    vim.cmd("TermExec cmd='" .. command .. "'")
 end
+
+vim.api.nvim_create_user_command("JavaRun", function (args)
+    JRun(args["args"])
+end, {nargs='?'})
+
+vim.api.nvim_set_keymap('i', '<F5>', '<ESC>:JavaRun<CR>', {
+    desc = "Run the current Java program in terminal",
+})
+
+vim.api.nvim_set_keymap('n', '<F5>', ':JavaRun<CR>', {
+    desc = "Run the current Java program in terminal",
+})
